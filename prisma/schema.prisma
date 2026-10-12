@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id       Int       @id @default(autoincrement())
+  email         String    @unique
+  username      String
+  password      String
+  refresh_token String?
+  createdAt     DateTime  @default(now())
+  bio           String?
+  role          String    @default("user")
+  Booking       Booking[]
+}
+
+model Theater {
+  theater_id           Int                    @id @default(autoincrement())
+  theater_name         String
+  address              String
+  Theater_availability Theater_Availability[]
+  Seat                 Seat[]
+  Show                 Show[]
+}
+
+model Theater_Availability {
+  theater_id        Int     @id @default(autoincrement())
+  operational_hours String
+  Theater           Theater @relation(fields: [theater_id], references: [theater_id])
+}
+
+model Category {
+  categoryID     Int     @id @default(autoincrement())
+  categoryType   String
+  price_modifier Decimal
+  Seat           Seat[]
+}
+
+model Seat {
+  seat_id     Int           @id @default(autoincrement())
+  theater_id  Int
+  categoryID  Int
+  seatNumber  String
+  Theater     Theater       @relation(fields: [theater_id], references: [theater_id])
+  Category    Category      @relation(fields: [categoryID], references: [categoryID])
+  BookingSeat BookingSeat[]
+}
+
+model Event {
+  eventID   Int      @id @default(autoincrement())
+  eventName String
+  eventType String
+  eventDate DateTime
+  Show      Show[]
+}
+
+model Show {
+  show_id     Int           @id @default(autoincrement())
+  eventID     Int
+  theater_id  Int
+  showTime    DateTime
+  base_price  Decimal
+  Event       Event         @relation(fields: [eventID], references: [eventID])
+  Theater     Theater       @relation(fields: [theater_id], references: [theater_id])
+  Booking     Booking[]
+  BookingSeat BookingSeat[]
+}
+
+model Booking {
+  booking_id      Int           @id @default(autoincrement())
+  user_id         Int
+  show_id         Int
+  status          String
+  created_at      DateTime      @default(now())
+  idempotency_key String?       @unique
+  expires_at      DateTime?
+  User            User          @relation(fields: [user_id], references: [user_id])
+  Show            Show          @relation(fields: [show_id], references: [show_id])
+  BookingSeat     BookingSeat[]
+  Payment         Payment[]
+}
+
+model BookingSeat {
+  booking_id Int
+  seat_id    Int
+  show_id    Int
+  Booking    Booking @relation(fields: [booking_id], references: [booking_id])
+  Seat       Seat    @relation(fields: [seat_id], references: [seat_id])
+  Show       Show    @relation(fields: [show_id], references: [show_id])
+
+  @@id([booking_id, seat_id])
+  @@unique([show_id, seat_id])
+}
+
+model Payment {
+  payment_id     Int     @id @default(autoincrement())
+  booking_id     Int
+  amount         Decimal
+  payment_status String
+  paymentType    String
+  Booking        Booking @relation(fields: [booking_id], references: [booking_id])
+}

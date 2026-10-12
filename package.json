@@ -1,0 +1,30 @@
+{
+  "name": "concurrent-ticket-booking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "jod": "^0.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "jwt": "^0.2.0",
+    "pg": "^8.23.0",
+    "redis": "^6.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@prisma/client": "^7.10.0",
+    "i": "^0.3.7",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.10.0"
+  }
+}
